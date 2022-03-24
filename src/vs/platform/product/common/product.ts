@@ -66,7 +66,15 @@ else {
 			urlProtocol: 'code-oss',
 			reportIssueUrl: 'https://github.com/microsoft/vscode/issues/new',
 			licenseName: 'MIT',
-			licenseUrl: 'https://github.com/microsoft/vscode/blob/main/LICENSE.txt'
+			licenseUrl: 'https://github.com/microsoft/vscode/blob/main/LICENSE.txt',
+			extensionsGallery: { // For debugging extensionsGallery
+				serviceUrl: 'https://marketplace.visualstudio.com/_apis/public/gallery',
+				cacheUrl: 'https://vscode.blob.core.windows.net/gallery/index',
+				itemUrl: 'https://marketplace.visualstudio.com/items',
+				resourceUrlTemplate: 'https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}',
+				controlUrl: 'https://az764295.vo.msecnd.net/extensions/marketplace.json',
+				recommendationsUrl: 'https://az764295.vo.msecnd.net/extensions/workspaceRecommendations.json.gz'
+			}
 		});
 	}
 }

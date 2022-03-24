@@ -498,6 +498,7 @@ function doCreateUri(path: string, queryValues: Map<string, string>): URI {
 	// Create workbench
 	create(document.body, {
 		...config,
+		remoteAuthority: config.remoteAuthority ? location.host : undefined, // Don't try to connect to 0.0.0.0 when header is rewrited by middleware
 		settingsSyncOptions: config.settingsSyncOptions ? {
 			enabled: config.settingsSyncOptions.enabled,
 		} : undefined,

@@ -705,7 +705,9 @@ class ExtensionsContributions extends Disposable implements IWorkbenchContributi
 			run: async () => {
 				const extensionsToDisable = this.extensionsWorkbenchService.local.filter(e => !e.isBuiltin && !!e.local && this.extensionEnablementService.isEnabled(e.local) && this.extensionEnablementService.canChangeEnablement(e.local));
 				if (extensionsToDisable.length) {
-					await this.extensionsWorkbenchService.setEnablement(extensionsToDisable, EnablementState.DisabledGlobally);
+					try {
+						await this.extensionsWorkbenchService.setEnablement(extensionsToDisable, EnablementState.DisabledGlobally);
+					} catch (e) { }
 				}
 			}
 		});
@@ -721,7 +723,9 @@ class ExtensionsContributions extends Disposable implements IWorkbenchContributi
 			run: async () => {
 				const extensionsToDisable = this.extensionsWorkbenchService.local.filter(e => !e.isBuiltin && !!e.local && this.extensionEnablementService.isEnabled(e.local) && this.extensionEnablementService.canChangeEnablement(e.local));
 				if (extensionsToDisable.length) {
-					await this.extensionsWorkbenchService.setEnablement(extensionsToDisable, EnablementState.DisabledWorkspace);
+					try {
+						await this.extensionsWorkbenchService.setEnablement(extensionsToDisable, EnablementState.DisabledWorkspace);
+					} catch (e) { }
 				}
 			}
 		});

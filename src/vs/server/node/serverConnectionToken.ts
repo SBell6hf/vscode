@@ -13,8 +13,6 @@ import { connectionTokenCookieName, connectionTokenQueryName } from 'vs/base/com
 import { ServerParsedArgs } from 'vs/server/node/serverEnvironmentService';
 import { Promises } from 'vs/base/node/pfs';
 
-const connectionTokenRegex = /^[0-9A-Za-z-]+$/;
-
 export const enum ServerConnectionTokenType {
 	None,
 	Optional,// TODO: Remove this soon
@@ -84,16 +82,16 @@ export async function parseServerConnectionToken(args: ServerParsedArgs, default
 			return new ServerConnectionTokenParseError(`Unable to read the connection token file at '${connectionTokenFile}'.`);
 		}
 
-		if (!connectionTokenRegex.test(rawConnectionToken)) {
-			return new ServerConnectionTokenParseError(`The connection token defined in '${connectionTokenFile} does not adhere to the characters 0-9, a-z, A-Z or -.`);
+		if (rawConnectionToken === '') {
+			return new ServerConnectionTokenParseError(`The connection token defined in '${connectionTokenFile}' is empty.`);
 		}
 
 		return new MandatoryServerConnectionToken(rawConnectionToken);
 	}
 
 	if (typeof connectionToken !== 'undefined') {
-		if (!connectionTokenRegex.test(connectionToken)) {
-			return new ServerConnectionTokenParseError(`The connection token '${connectionToken} does not adhere to the characters 0-9, a-z, A-Z or -.`);
+		if (connectionToken === '') {
+			return new ServerConnectionTokenParseError(`The connection token '${connectionToken}' is empty.`);
 		}
 
 		if (compatibility) {
@@ -125,7 +123,7 @@ export async function determineServerConnectionToken(args: ServerParsedArgs): Pr
 		try {
 			const fileContents = await Promises.readFile(storageLocation);
 			const connectionToken = fileContents.toString().replace(/\r?\n$/, '');
-			if (connectionTokenRegex.test(connectionToken)) {
+			if (connectionToken !== '') {
 				return connectionToken;
 			}
 		} catch (err) { }

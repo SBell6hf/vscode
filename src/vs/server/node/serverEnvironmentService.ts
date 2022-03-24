@@ -16,6 +16,8 @@ export const serverOptions: OptionDescriptions<ServerParsedArgs> = {
 
 	'host': { type: 'string', cat: 'o', args: 'ip-address', description: nls.localize('host', "The host name or IP address the server should listen to. If not set, defaults to 'localhost'.") },
 	'port': { type: 'string', cat: 'o', args: 'port | port range', description: nls.localize('port', "The port the server should listen to. If 0 is passed a random free port is picked. If a range in the format num-num is passed, a free port from the range (end inclusive) is selected.") },
+	'tls-key': { type: 'string', cat: 'o', args: 'path', description: nls.localize('server-tls-key', 'The path to a TLS private key.') },
+	'tls-cert': { type: 'string', cat: 'o', args: 'path', description: nls.localize('server-tls-cert', 'The path to a TLS certificate.') },
 	'pick-port': { type: 'string', deprecationMessage: 'Use the range notation in \'port\' instead.' },
 	'socket-path': { type: 'string', cat: 'o', args: 'path', description: nls.localize('socket-path', "The path to a socket file for the server to listen to.") },
 	'connection-token': { type: 'string', cat: 'o', args: 'token', deprecates: ['connectionToken'], description: nls.localize('connection-token', "A secret that must be included with all requests.") },
@@ -24,6 +26,7 @@ export const serverOptions: OptionDescriptions<ServerParsedArgs> = {
 	'disable-websocket-compression': { type: 'boolean' },
 	'print-startup-performance': { type: 'boolean' },
 	'print-ip-address': { type: 'boolean' },
+	'tls': { type: 'boolean', cat: 'o', description: nls.localize('server-tls', 'Whether to enable TLS.') },
 	'accept-server-license-terms': { type: 'boolean', cat: 'o', description: nls.localize('acceptLicenseTerms', "If set, the user accepts the server license terms and the server will be started without a user prompt.") },
 	'server-data-dir': { type: 'string', cat: 'o', description: nls.localize('serverDataDir', "Specifies the directory that server data is kept in.") },
 	'telemetry-level': { type: 'string', cat: 'o', args: 'level', description: nls.localize('telemetry-level', "Sets the initial telemetry level. Valid levels are: 'off', 'crash', 'error' and 'all'. If not specified, the server will await a connection before sending any telemetry. Setting this to 'off' is equivalent to --disable-telemetry") },
@@ -93,6 +96,9 @@ export interface ServerParsedArgs {
 
 	host?: string;
 	port?: string;
+	tls?: boolean;
+	'tls-key'?: string;
+	'tls-cert'?: string;
 	'pick-port'?: string;
 	'socket-path'?: string;
 

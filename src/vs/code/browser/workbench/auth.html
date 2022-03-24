@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="color-scheme" content="dark light">
+		<title>Authication Required</title>
+		<style>
+			@media (prefers-color-scheme: light) {
+				body {
+					background: #ffffff;
+				}
+				.outer3 {
+					background: #f3f3f3;
+					filter: drop-shadow(2px 2px 2px #f3f3f3);
+				}
+				.bottom {
+					background: #006ab1;
+				}
+				.content {
+					color: #616161;
+				}
+				.token-input {
+					color: #616161;
+					background: #ffffff;
+					border: 1px solid #cecece;
+					padding: 3px 5px 1px 5px;
+				}
+				.token-input:focus {
+					outline-color: #0090f1;
+				}
+				.token-input::placeholder {
+					color: #767676;
+				}
+				.token-input-error::placeholder {
+					color: hsl(5, 50%, 40%);
+				}
+			}
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #1e1e1e;
+				}
+				.outer3 {
+					background: #252526;
+					filter: drop-shadow(2px 2px 2px #252526);
+				}
+				.bottom {
+					background: #3794ff;
+				}
+				.content {
+					color: #cccccc;
+				}
+				.token-input {
+					color: #cccccc;
+					background: #3c3c3c;
+					border: none;
+					padding: 4px 5px 2px 5px;
+				}
+				.token-input:focus {
+					outline-color: #007fd4;
+				}
+				.token-input::placeholder {
+					color: #a6a6a6;
+				}
+				.token-input-error::placeholder {
+					color: hsl(5, 70%, 70%);
+				}
+			}
+			.outer1 {
+				display: table;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+			}
+			.outer2 {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.outer3 {
+				margin-left: auto;
+				margin-right: auto;
+				width: 570px;
+				height: 150px;
+				border-radius: 6px;
+				overflow: hidden;
+				position: relative; /* Without this, `position: absolute;' would not work on Safari. */
+			}
+			.bottom {
+				position: absolute;
+				bottom: 0;
+				height: 4px;
+				width: 100%;
+			}
+			.content {
+				margin: 33px 31px 33px 31px;
+				height: 80px;
+				width: 508px;
+				font-family: sans-serif;
+				font-size: 0.5cm;
+			}
+			.token-input {
+				position: relative;
+				top: 26px;
+				width: 498px;
+				vertical-align: middle;
+				line-height: 0;
+				height: 20px;
+				font-size: 13px;
+			}
+			.token-input:focus {
+				outline-width: 1px;
+				outline-style: solid;
+				outline-offset: -1px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="outer1">
+			<div class="outer2">
+				<div class="outer3">
+					<div class="content">
+						Access denied. Please enter the connection token.
+						<input class="token-input" type="password" id="token-input" placeholder="Enter Connection Token" />
+					</div>
+					<div class="bottom"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			const tokenInput = document.getElementById('token-input');
+			let lastError = new URLSearchParams(window.location.search).get('invalTkn') !== null;
+
+			if (lastError) {
+				tokenInput.setAttribute('placeholder', 'Invalid Connection Token');
+				tokenInput.className += ' token-input-error'
+				history.replaceState(null, '', location.pathname);
+			}
+
+			tokenInput.addEventListener('keydown', (event) => {
+				if (lastError) {
+					lastError = false;
+					tokenInput.setAttribute('placeholder', 'Enter Connection Token');
+					tokenInput.className = 'token-input';
+				}
+				if (event.key === 'Enter') {
+					fetch('/?tkn=' + encodeURIComponent(tokenInput.value), { redirect: 'manual' }).then((response) => {
+						if (response.status === 403) {
+							lastError = true;
+							tokenInput.value = '';
+							tokenInput.setAttribute('placeholder', 'Invalid Connection Token');
+							tokenInput.className += ' token-input-error'
+
+						} else if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 200) {
+							location.replace('/');
+
+						} else {
+							lastError = true;
+							tokenInput.value = '';
+							tokenInput.setAttribute('placeholder', 'Unknown Error');
+							tokenInput.className += ' token-input-error'
+						}
+
+					}).catch((error) => {
+						lastError = true;
+						tokenInput.value = '';
+						tokenInput.setAttribute('placeholder', 'Network Error');
+						tokenInput.className += ' token-input-error'
+					});
+				}
+			});
+		</script>
+	</body>
+</html>

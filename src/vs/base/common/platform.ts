@@ -11,6 +11,7 @@ let _isLinux = false;
 let _isLinuxSnap = false;
 let _isNative = false;
 let _isWeb = false;
+let _isReh = false;
 let _isElectron = false;
 let _isIOS = false;
 let _isCI = false;
@@ -84,6 +85,14 @@ if (typeof navigator === 'object' && !isElectronRenderer) {
 	_isWeb = true;
 	_locale = navigator.language;
 	_language = _locale;
+
+	const configElement = document.getElementById('vscode-workbench-web-configuration');
+	const configElementAttribute = configElement ? configElement.getAttribute('data-settings') : undefined;
+	if (!configElement || !configElementAttribute) {
+		console.error('Missing web configuration element');
+	} else if (JSON.parse(configElementAttribute).remoteAuthority) {
+		_isReh = true;
+	}
 }
 
 // Native environment
@@ -147,6 +156,7 @@ export const isLinuxSnap = _isLinuxSnap;
 export const isNative = _isNative;
 export const isElectron = _isElectron;
 export const isWeb = _isWeb;
+export const isReh = _isReh;
 export const isWebWorker = (_isWeb && typeof globals.importScripts === 'function');
 export const isIOS = _isIOS;
 /**

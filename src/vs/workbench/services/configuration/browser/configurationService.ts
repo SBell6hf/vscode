@@ -39,6 +39,7 @@ import { IExtensionService } from 'vs/workbench/services/extensions/common/exten
 import { IWorkbenchAssignmentService } from 'vs/workbench/services/assignment/common/assignmentService';
 import { isUndefined } from 'vs/base/common/types';
 import { localize } from 'vs/nls';
+import { isReh } from 'vs/base/common/platform';
 
 class Workspace extends BaseWorkspace {
 	initialized: boolean = false;
@@ -964,6 +965,9 @@ export class WorkspaceService extends Disposable implements IWorkbenchConfigurat
 
 	private toEditableConfigurationTarget(target: ConfigurationTarget, key: string): EditableConfigurationTarget | null {
 		if (target === ConfigurationTarget.USER) {
+			if (isReh) {
+				return EditableConfigurationTarget.USER_REMOTE;
+			}
 			if (this.remoteUserConfiguration) {
 				const scope = this.configurationRegistry.getConfigurationProperties()[key]?.scope;
 				if (scope === ConfigurationScope.MACHINE || scope === ConfigurationScope.MACHINE_OVERRIDABLE) {

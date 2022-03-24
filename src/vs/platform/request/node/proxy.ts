@@ -46,5 +46,5 @@ export async function getProxyAgent(rawRequestURL: string, env: typeof process.e
 
 	return requestURL.protocol === 'http:'
 		? new (await import('http-proxy-agent'))(opts as any as Url)
-		: new (await import('https-proxy-agent'))(opts);
+		: (await import('https-proxy-agent'))(opts);
 }

@@ -69,7 +69,7 @@
     "applicationinsights": "1.4.2",
     "graceful-fs": "4.2.8",
     "http-proxy-agent": "^2.1.0",
-    "https-proxy-agent": "^2.2.3",
+    "https-proxy-agent": "^5.0.0",
     "jschardet": "3.0.0",
     "keytar": "7.9.0",
     "minimist": "^1.2.5",
@@ -124,7 +124,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "@vscode/telemetry-extractor": "^1.9.5",
-    "@vscode/test-web": "^0.0.22",
+    "@vscode/test-web": "git+https://github.com/SBell6hf/vscode-test-web.git",
     "ansi-colors": "^3.2.3",
     "asar": "^3.0.3",
     "chromium-pickle-js": "^0.2.0",
@@ -227,8 +227,14 @@
     "windows-mutex": "0.4.1",
     "windows-process-tree": "^0.3.2"
   },
+  "overrides": {
+    "https-proxy-agent": "^5.0.0",
+    "agent-base": "^6.0.2"
+  },
   "resolutions": {
     "elliptic": "^6.5.3",
-    "nwmatcher": "^1.4.4"
+    "nwmatcher": "^1.4.4",
+    "https-proxy-agent": "^5.0.0",
+    "agent-base": "^6.0.2"
   }
 }

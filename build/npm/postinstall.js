@@ -93,3 +93,4 @@ runtime "${runtime}"`;
 
 cp.execSync('git config pull.rebase merges');
 cp.execSync('git config blame.ignoreRevsFile .git-blame-ignore');
+cp.execSync('cd node_modules/@vscode/test-web; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn; npx tsc -p .');

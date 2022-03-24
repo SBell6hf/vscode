@@ -113,9 +113,9 @@ export class RemoteExtensionHostAgentServer extends Disposable implements IServe
 			return res.end('OK');
 		}
 
-		if (!httpRequestHasValidConnectionToken(this._connectionToken, req, parsedUrl)) {
+		if (!httpRequestHasValidConnectionToken(this._connectionToken, req, parsedUrl) && pathname !== '/static/out/vs/code/browser/workbench/auth.html') {
 			// invalid connection token
-			return serveError(req, res, 403, `Forbidden.`);
+			return serveError(req, res, 403, '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=/static/out/vs/code/browser/workbench/auth.html"><script>location.replace("/static/out/vs/code/browser/workbench/auth.html")</script></head><body><code>Forbidden.</code></body></html>', 'text/html; charset=UTF-8');
 		}
 
 		if (pathname === '/vscode-remote-resource') {
@@ -296,7 +296,7 @@ export class RemoteExtensionHostAgentServer extends Disposable implements IServe
 					return rejectWebSocketConnection(`Invalid first message`);
 				}
 
-				if (this._connectionToken.type === ServerConnectionTokenType.Mandatory && !this._connectionToken.validate(msg1.auth)) {
+				if (this._connectionToken.type === ServerConnectionTokenType.Mandatory && !this._connectionToken.validate(decodeURIComponent(msg1.auth))) {
 					return rejectWebSocketConnection(`Unauthorized client refused: auth mismatch`);
 				}
 
@@ -362,7 +362,7 @@ export class RemoteExtensionHostAgentServer extends Disposable implements IServe
 				}
 
 				if (!valid) {
-					if (this._environmentService.isBuilt) {
+					if (1 || this._environmentService.isBuilt) {
 						return rejectWebSocketConnection(`Unauthorized client refused`);
 					} else {
 						this._logService.error(`${logPrefix} Unauthorized client handshake failed but we proceed because of dev mode.`);
@@ -696,8 +696,8 @@ export async function createServer(address: string | net.AddressInfo | null, arg
 
 	if (hasWebClient && address && typeof address !== 'string') {
 		// ships the web ui!
-		const queryPart = (connectionToken.type !== ServerConnectionTokenType.None ? `?${connectionTokenQueryName}=${connectionToken.value}` : '');
-		console.log(`Web UI available at http://localhost${address.port === 80 ? '' : `:${address.port}`}/${queryPart}`);
+		const queryPart = (connectionToken.type !== ServerConnectionTokenType.None ? `?${connectionTokenQueryName}=${encodeURIComponent(connectionToken.value)}` : '');
+		console.log(`Web UI available at http${args.tls ? 's' : ''}://localhost${args.tls ? (address.port === 443 ? '' : `:${address.port}`) : (address.port === 80 ? '' : `:${address.port}`)}/${queryPart}`);
 	}
 
 	const remoteExtensionHostAgentServer = instantiationService.createInstance(RemoteExtensionHostAgentServer, socketServer, connectionToken, vsdaMod, hasWebClient);

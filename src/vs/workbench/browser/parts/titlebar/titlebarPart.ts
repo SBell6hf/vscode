@@ -378,7 +378,7 @@ export class TitlebarPart extends Part implements ITitleService {
 				if (homeIndicator) {
 					const icon: ThemeIcon = getIconRegistry().getIcon(homeIndicator.icon) ? { id: homeIndicator.icon } : Codicon.code;
 
-					this.appIcon.setAttribute('href', homeIndicator.href);
+					// this.appIcon.setAttribute('href', homeIndicator.href);
 					this.appIcon.classList.add(...ThemeIcon.asClassNameArray(icon));
 					this.appIconBadge = document.createElement('div');
 					this.appIconBadge.classList.add('home-bar-icon-badge');

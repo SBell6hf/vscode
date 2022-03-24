@@ -46,6 +46,7 @@ import { IRemoteAgentService } from 'vs/workbench/services/remote/common/remoteA
 import { ITextEditorService } from 'vs/workbench/services/textfile/common/textEditorService';
 import { ITextFileService } from 'vs/workbench/services/textfile/common/textfiles';
 import { isArray, isObject } from 'vs/base/common/types';
+import { isReh } from 'vs/base/common/platform';
 
 const emptyEditableSettingsContent = '{\n}';
 
@@ -211,6 +212,9 @@ export class PreferencesService extends Disposable implements IPreferencesServic
 			...options,
 			target: ConfigurationTarget.USER_LOCAL,
 		};
+		if (isReh) {
+			options.target = ConfigurationTarget.USER_REMOTE;
+		}
 		if (options.query) {
 			options.jsonEditor = false;
 		}
@@ -235,6 +239,12 @@ export class PreferencesService extends Disposable implements IPreferencesServic
 			...options,
 			focusSearch: true
 		};
+		if (isReh) {
+			options = {
+				target: ConfigurationTarget.USER_REMOTE,
+				...options
+			};
+		}
 		await this.editorService.openEditor(input, validateSettingsEditorOptions(options), options.openToSide ? SIDE_GROUP : undefined);
 		return this.editorGroupService.activeGroup.activeEditorPane!;
 	}

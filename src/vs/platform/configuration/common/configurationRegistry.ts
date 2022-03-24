@@ -12,6 +12,7 @@ import * as nls from 'vs/nls';
 import { getLanguageTagSettingPlainKey } from 'vs/platform/configuration/common/configuration';
 import { Extensions as JSONExtensions, IJSONContributionRegistry } from 'vs/platform/jsonschemas/common/jsonContributionRegistry';
 import { Registry } from 'vs/platform/registry/common/platform';
+import { isReh } from 'vs/base/common/platform';
 
 export enum EditPresentationTypes {
 	Multiline = 'multilineText',
@@ -257,6 +258,18 @@ class ConfigurationRegistry implements IConfigurationRegistry {
 	}
 
 	public registerConfigurations(configurations: IConfigurationNode[], validate: boolean = true): void {
+		if (isReh) {
+			for (let configuration of configurations) {
+				if (configuration.properties) {
+					for (let propertyName of Object.keys(configuration.properties)) {
+						if (configuration.properties[propertyName].scope === ConfigurationScope.APPLICATION) {
+							configuration.properties[propertyName].scope = ConfigurationScope.MACHINE;
+						}
+					}
+				}
+			}
+		}
+
 		const properties = this.doRegisterConfigurations(configurations, validate);
 
 		contributionRegistry.registerSchema(resourceLanguageSettingsSchemaId, this.resourceLanguageSettingsSchema);

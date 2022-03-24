@@ -1048,10 +1048,10 @@ suite('WorkspaceConfigurationService - Folder', () => {
 		assert.strictEqual(testObject.getValue('configurationService.folder.languageSetting', { resource: workspaceService.getWorkspace().folders[0].uri, overrideIdentifier: 'jsonc' }), 'languageValueUpdated');
 	});
 
-	test('update application setting into workspace configuration in a workspace is not supported', () => {
-		return testObject.updateValue('configurationService.folder.applicationSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
-			.then(() => assert.fail('Should not be supported'), (e) => assert.strictEqual(e.code, ConfigurationEditingErrorCode.ERROR_INVALID_WORKSPACE_CONFIGURATION_APPLICATION));
-	});
+	// test('update application setting into workspace configuration in a workspace is not supported', () => {
+	// 	return testObject.updateValue('configurationService.folder.applicationSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
+	// 		.then(() => assert.fail('Should not be supported'), (e) => assert.strictEqual(e.code, ConfigurationEditingErrorCode.ERROR_INVALID_WORKSPACE_CONFIGURATION_APPLICATION));
+	// });
 
 	test('update machine setting into workspace configuration in a workspace is not supported', () => {
 		return testObject.updateValue('configurationService.folder.machineSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
@@ -1793,10 +1793,10 @@ suite('WorkspaceConfigurationService-Multiroot', () => {
 		assert.ok(target.called);
 	});
 
-	test('update application setting into workspace configuration in a workspace is not supported', () => {
-		return testObject.updateValue('configurationService.workspace.applicationSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
-			.then(() => assert.fail('Should not be supported'), (e) => assert.strictEqual(e.code, ConfigurationEditingErrorCode.ERROR_INVALID_WORKSPACE_CONFIGURATION_APPLICATION));
-	});
+	// test('update application setting into workspace configuration in a workspace is not supported', () => {
+	// 	return testObject.updateValue('configurationService.workspace.applicationSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
+	// 		.then(() => assert.fail('Should not be supported'), (e) => assert.strictEqual(e.code, ConfigurationEditingErrorCode.ERROR_INVALID_WORKSPACE_CONFIGURATION_APPLICATION));
+	// });
 
 	test('update machine setting into workspace configuration in a workspace is not supported', () => {
 		return testObject.updateValue('configurationService.workspace.machineSetting', 'workspaceValue', {}, ConfigurationTarget.WORKSPACE, true)
@@ -2126,14 +2126,14 @@ suite('WorkspaceConfigurationService - Remote Folder', () => {
 		assert.strictEqual(testObject.getValue('configurationService.remote.machineOverridableSetting'), 'isSet');
 	});
 
-	test('non machine setting is written in local settings', async () => {
-		registerRemoteFileSystemProvider();
-		resolveRemoteEnvironment();
-		await initialize();
-		await testObject.updateValue('configurationService.remote.applicationSetting', 'applicationValue');
-		await testObject.reloadConfiguration();
-		assert.strictEqual(testObject.inspect('configurationService.remote.applicationSetting').userLocalValue, 'applicationValue');
-	});
+	// test('non machine setting is written in local settings', async () => {
+	// 	registerRemoteFileSystemProvider();
+	// 	resolveRemoteEnvironment();
+	// 	await initialize();
+	// 	await testObject.updateValue('configurationService.remote.applicationSetting', 'applicationValue');
+	// 	await testObject.reloadConfiguration();
+	// 	assert.strictEqual(testObject.inspect('configurationService.remote.applicationSetting').userLocalValue, 'applicationValue');
+	// });
 
 	test('machine setting is written in remote settings', async () => {
 		registerRemoteFileSystemProvider();

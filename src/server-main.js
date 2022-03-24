@@ -20,8 +20,8 @@ async function start() {
 
 	// Do a quick parse to determine if a server or the cli needs to be started
 	const parsedArgs = minimist(process.argv.slice(2), {
-		boolean: ['start-server', 'list-extensions', 'print-ip-address', 'help', 'version', 'accept-server-license-terms'],
-		string: ['install-extension', 'install-builtin-extension', 'uninstall-extension', 'locate-extension', 'socket-path', 'host', 'port', 'pick-port', 'compatibility'],
+		boolean: ['start-server', 'list-extensions', 'print-ip-address', 'help', 'version', 'accept-server-license-terms', 'tls'],
+		string: ['install-extension', 'install-builtin-extension', 'uninstall-extension', 'locate-extension', 'socket-path', 'host', 'port', 'pick-port', 'compatibility', 'tls-key', 'tls-cert'],
 		alias: { help: 'h', version: 'v' }
 	});
 	['host', 'port', 'accept-server-license-terms'].forEach(e => {
@@ -66,7 +66,9 @@ async function start() {
 		return _remoteExtensionHostAgentServerPromise;
 	};
 
+	const fs = require('fs');
 	const http = require('http');
+	const https = require('https');
 	const os = require('os');
 
 	if (Array.isArray(product.serverLicense) && product.serverLicense.length) {
@@ -93,7 +95,10 @@ async function start() {
 
 	/** @type {string | import('net').AddressInfo | null} */
 	let address = null;
-	const server = http.createServer(async (req, res) => {
+	const server = (parsedArgs['tls'] ? https : http).createServer(parsedArgs['tls'] ? {
+		key: fs.readFileSync(parsedArgs['tls-key']),
+		cert: fs.readFileSync(parsedArgs['tls-cert']),
+	} : {}, async (req, res) => {
 		if (firstRequest) {
 			firstRequest = false;
 			perf.mark('code/server/firstRequest');

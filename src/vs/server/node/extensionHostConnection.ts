@@ -143,7 +143,9 @@ export class ExtensionHostConnection {
 		// Make sure all outstanding writes have been drained before sending the socket
 		await connectionData.socketDrain;
 		const msg = connectionData.toIExtHostSocketMessage();
-		extensionHostProcess.send(msg, connectionData.socket);
+		if (connectionData.socket instanceof net.Socket) { // TODO: Fix TLSSocket sending
+			extensionHostProcess.send(msg, connectionData.socket);
+		}
 	}
 
 	public shortenReconnectionGraceTimeIfNecessary(): void {

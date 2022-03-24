@@ -39,8 +39,8 @@ const textMimeType = {
 /**
  * Return an error to the client.
  */
-export async function serveError(req: http.IncomingMessage, res: http.ServerResponse, errorCode: number, errorMessage: string): Promise<void> {
-	res.writeHead(errorCode, { 'Content-Type': 'text/plain' });
+export async function serveError(req: http.IncomingMessage, res: http.ServerResponse, errorCode: number, errorMessage: string, contentType: string = 'text/plain'): Promise<void> {
+	res.writeHead(errorCode, { 'Content-Type': contentType });
 	res.end(errorMessage);
 }
 
